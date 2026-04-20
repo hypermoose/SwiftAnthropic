@@ -94,6 +94,8 @@ public struct MessageParameter: Encodable {
    /// Controls whether Claude's extended thinking/reasoning mode is enabled
    /// and specifies token budget allocated for thinking before responding.
    public let thinking: Thinking?
+    
+   public let outputConfig: OutputConfig?
 
    /// Container configuration for skills and code execution environment.
    /// Specifies which skills to load and optionally reuses an existing container.
@@ -607,10 +609,11 @@ public struct MessageParameter: Encodable {
       /// The type of thinking, currently only "enabled" is supported
       let type: ThinkingType
       /// Token budget allocated for extended thinking (maximum number of tokens to use for thinking)
-      let budgetTokens: Int
+      let budgetTokens: Int?
       
       public enum ThinkingType: String, Encodable {
          case enabled
+         case adaptive
       }
       
       private enum CodingKeys: String, CodingKey {
@@ -618,11 +621,23 @@ public struct MessageParameter: Encodable {
          case budgetTokens = "budget_tokens"
       }
       
-      public init(type: ThinkingType = .enabled, budgetTokens: Int) {
+      public init(type: ThinkingType = .enabled, budgetTokens: Int?) {
          self.type = type
          self.budgetTokens = budgetTokens
       }
    }
+    
+    public struct OutputConfig: Encodable {
+        let effort: String
+        
+        private enum CodingKeys: String, CodingKey {
+            case effort
+        }
+        
+        public init(effort: String) {
+            self.effort = effort
+        }
+    }
    
    // MARK: - Web Search Types
    
@@ -743,6 +758,7 @@ public struct MessageParameter: Encodable {
       tools: [Tool]? = nil,
       toolChoice: ToolChoice? = nil,
       thinking: Thinking? = nil,
+      outputConfig: OutputConfig? = nil,
       container: Container? = nil)
    {
       self.model = model.value
@@ -758,6 +774,7 @@ public struct MessageParameter: Encodable {
       self.tools = tools
       self.toolChoice = toolChoice
       self.thinking = thinking
+      self.outputConfig = outputConfig
       self.container = container
    }
 }
