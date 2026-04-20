@@ -621,7 +621,7 @@ public struct MessageParameter: Encodable {
          case budgetTokens = "budget_tokens"
       }
       
-      public init(type: ThinkingType = .enabled, budgetTokens: Int?) {
+      public init(type: ThinkingType = .enabled, budgetTokens: Int? = nil) {
          self.type = type
          self.budgetTokens = budgetTokens
       }
